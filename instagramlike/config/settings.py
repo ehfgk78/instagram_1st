@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 PROJECT_ROOT = os.path.dirname(BASE_DIR)
 SETTINGS_COMMON_JSON = os.path.join(os.path.join(PROJECT_ROOT, '.config_secret'), 'settings_common.json')
 f = open(SETTINGS_COMMON_JSON)
@@ -21,7 +22,12 @@ config_secret_text = f.read()
 f.close()
 config_secret_dict = json.loads(config_secret_text)
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 STATIC_URL = '/static/'
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
