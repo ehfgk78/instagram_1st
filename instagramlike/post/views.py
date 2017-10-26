@@ -23,6 +23,7 @@ def post_create(request):
         # photo = request.FILES['photo']
         # post = Post.objects.create(photo=photo)
         form = PostForm(request.POST, request.FILES)
+        # form 생성과정에서 전달된 데이터들이 Form의 모든 field들에 유효한지 검사
         if form.is_valid():
             print(form.cleaned_data)
             post = Post.objects.create(
@@ -35,6 +36,15 @@ def post_create(request):
             request,
             'post/post_create.html'
         )
+
+def post_detail(request, post_pk):
+    return render(
+        request,
+        'post/post_detail.html',
+        {
+            'post': Post.objects.get(pk=post_pk)
+        }
+    )
 
 
 
