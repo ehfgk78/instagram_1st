@@ -9,8 +9,12 @@ def post_list(request):
     return render(
         request,
         'post/post_list.html',
-        {'posts': Post.objects.all(), }
+        {
+            'posts': Post.objects.all(),
+            'comment_form': CommentForm(),
+        }
     )
+
 
 def post_create(request):
     # photo = request.FILES.get('photo')
@@ -37,6 +41,7 @@ def post_create(request):
             'post/post_create.html'
         )
 
+
 def post_detail(request, post_pk):
     return render(
         request,
@@ -46,6 +51,7 @@ def post_detail(request, post_pk):
             'comment_form': CommentForm()
         }
     )
+
 
 def comment_create(request, post_pk):
     post = get_object_or_404(Post, pk=post_pk)
@@ -59,6 +65,9 @@ def comment_create(request, post_pk):
                 post=post,
                 content=comment_form.cleaned_data['content']
             )
+            next_path = request.GET.get('next')
+            if next_path:
+                return redirect(next_path)
             # 생성 후 Post의 detail 화면으로 이동
             return redirect('post:post_detail', post_pk=post_pk)
     else:
@@ -68,10 +77,7 @@ def comment_create(request, post_pk):
     return render(
         request,
         'post/comment_create.html',
-        context= {
+        context={
             'form': comment_form,
         }
     )
-
-
-
