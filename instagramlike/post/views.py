@@ -42,7 +42,8 @@ def post_detail(request, post_pk):
         request,
         'post/post_detail.html',
         {
-            'post': get_object_or_404(Post, pk=post_pk)
+            'post': get_object_or_404(Post, pk=post_pk),
+            'comment_form': CommentForm()
         }
     )
 
@@ -71,9 +72,6 @@ def comment_create(request, post_pk):
             'form': comment_form,
         }
     )
-
-
-
 
 
 
