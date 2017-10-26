@@ -1,7 +1,9 @@
 <div>
     {% for post in posts %}
     <div>
+        <a href="{% url 'post:post_detail' post_pk=post.pk %}">
         <img src="{{ post.photo.url}}" alt="">
+        </a>
         <hr>
     </div>
     {% endfor %}

@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from post.forms import PostForm
 from post.models import Post
@@ -42,7 +42,7 @@ def post_detail(request, post_pk):
         request,
         'post/post_detail.html',
         {
-            'post': Post.objects.get(pk=post_pk)
+            'post': get_object_or_404(Post, pk=post_pk)
         }
     )
 
