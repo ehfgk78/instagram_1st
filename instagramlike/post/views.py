@@ -54,6 +54,10 @@ def post_detail(request, post_pk):
 
 
 def comment_create(request, post_pk):
+    print('request: ', request)
+    print(request.GET)
+    print(request.POST)
+
     post = get_object_or_404(Post, pk=post_pk)
     if request.method == 'POST':
         # CommentForm에 바인딩된 request.POST
