@@ -7,5 +7,16 @@
        {% else %}
     <h3>이미지 파일이 없습니다. </h3>
     {% endif %}
+
+    <form action="">
+        <button class="btn-primary btn btn-block">작성</button>
+    </form>
+
+    <ul>
+        {% for comment in post.postcomment_set.all %}
+        <li>{{ comment.content }}</li>
+        {% endfor %}
+    </ul>
+
 </div>
 {% endblock %}
