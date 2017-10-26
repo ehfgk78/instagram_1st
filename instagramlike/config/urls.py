@@ -22,7 +22,7 @@ from config import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^posts/', include(post.urls, namespace='post')),
+    url(r'^posts/', include( 'post.urls', namespace='post')),
 ]
 
 # MEDIA_URL이 MEDIA_ROOT의 파일을 리턴하도록 urlpatterns에 새로운 패턴 추가

@@ -1,5 +1,8 @@
 <div>
     {% for post in posts %}
-    <div>{{ post.photo }}</div>
+    <div>
+        <img src="{{ post.photo.url}}" alt="">
+        <hr>
+    </div>
     {% endfor %}
 </div>
