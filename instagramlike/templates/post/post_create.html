@@ -1,8 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} Post create {% endblock %}
+
+{% block content %}
+
 <div>
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <!--<input type="file" name="photo">-->
-        {{ form }}
-        <button type="submit">제출</button>
+           {{ form }}
+        <button>제출</button>
+
+        {% for field in form %}
+        <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+        </div>
+        {% endfor %}
+        <button class="btn btn-primary btn-block">포스트 등록</button>
     </form>
 </div>
+
+{% endblock %}
