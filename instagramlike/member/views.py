@@ -1,5 +1,6 @@
 from django.contrib.auth import (
     get_user_model,
+    logout as django_logout,
 )
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -42,3 +43,7 @@ def login(request):
             'login_form': form,
         }
     )
+
+def logout(request):
+    django_logout(request)
+    return redirect('post:post_list')
