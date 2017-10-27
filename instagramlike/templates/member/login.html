@@ -2,14 +2,8 @@
 
 {% block content %}
 
-<div class="login">
-    <form action="" method="POST">
-        {% csrf_token %}
-        <label for="">ID<input type="text" name="username"></label>
-        <br>
-        <label for="">비밀번호<input type="password" name="password"></label>
-        <button class="btn btn-primary btn-block">로그인</button>
-    </form>
+<div class="login-container">
+    {% include 'include/form-horizontal.html' with form=login_form submit_text='로그인' %}
 </div>
 
 {% endblock %}

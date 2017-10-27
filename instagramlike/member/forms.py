@@ -23,6 +23,40 @@ class SignupForm(forms.Form):
             }
         )
     )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+
+    # 중복 유저 검사
+    def clean_username(self):
+        data = self.cleaned_data['username']
+        if User.objects.filter(username=data).exists():
+            raise forms.ValidationError('으아아아아')
+        return data
+
+    # password 확인
+    def clean_password2(self):
+        password = self.cleaned_data['password']
+        password2 = self.cleaned_data['password2']
+        if password != password2:
+            raise forms.ValidationError('비밀번호가 일치하지 않습니다.')
+        return password2
+
+    # 회원가입 완료 전 마지막 유효성 검사
+    def clean(self):
+        if self.is_valid():
+            setattr(self, 'signup', self._signup)
+        return self.cleaned_data
+
+    def _signup(self):
+        return User.objects.create_user(
+            username=self.cleaned_data['username'],
+            password=self.cleaned_data['password']
+        )
 
 
 class LoginForm(forms.Form):
@@ -46,11 +80,11 @@ class LoginForm(forms.Form):
         self.user = None
 
     def clean(self):
-        cleaned_data = super().clean()
+        # cleaned_data = super().clean()
         # 해당 유저가 있는지 인증
         self.user = authenticate(
-            username=cleaned_data.get('username'),
-            password=cleaned_data.get('password')
+            username=self.cleaned_data.get('username'),
+            password=self.cleaned_data.get('password')
         )
         # 인증 안되면 에러 발생
         if not self.user:
