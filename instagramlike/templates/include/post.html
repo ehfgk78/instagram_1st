@@ -1,0 +1,33 @@
+    <div id="post-{{ post.pk }}" class="panel panel-default post">
+        <div class="panel-heading">Head</div>
+        <div class="panel-body">
+
+            <!--사진-->
+            <a href="{% url 'post:post_detail' post_pk=post.pk %}">
+                <img src="{{ post.photo.url}}" alt="" class="img-post">
+            </a>
+
+            <div class="body-content">
+                <!--댓글-->
+                <ul id="post-comments-{{ post.pk }}">
+                    {% for comment in post.postcomment_set.all %}
+                    <li>{{ comment.content }}</li>
+                    {% endfor %}
+                </ul>
+
+                <!--댓글 달기-->
+                <form action="{% url 'post:comment_create' post_pk=post.pk %}?next=
+                {% if post_type == 'list' %}
+                     /posts/#post-{{ post.pk }}
+                {% elif post_type == 'detail' %}
+                    {% url 'post:post_detail' post_pk=post.pk %}
+                {% endif %}"
+                      method="POST">
+                    {% csrf_token %}
+                    {{ comment_form }}
+                    <button class="btn btn-primary btn-block">댓글달기</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
