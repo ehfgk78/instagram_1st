@@ -17,7 +17,10 @@ def post_list(request):
 
 
 def post_create(request):
-    # photo = request.FILES.get('photo')
+    # login하지 않는  사용자는 login View로
+    if not request.user.is_authenticated:
+        return redirect('member:login')
+
     if request.method == 'POST':
         # print(request.POST)
         ## < QueryDict: {'csrfmiddlewaretoken': ['3bP8vMXgDmwdOlxOv5qb7iwcBDzZyvv94tBUFWTSl2MsQNXHcEeRJ8Au5tWwBGMZ']} >
@@ -29,8 +32,8 @@ def post_create(request):
         form = PostForm(request.POST, request.FILES)
         # form 생성과정에서 전달된 데이터들이 Form의 모든 field들에 유효한지 검사
         if form.is_valid():
-            print(form.cleaned_data)
             post = Post.objects.create(
+                author=request.user,
                 photo=form.cleaned_data['photo'])
             return redirect('post:post_list')
         else:
