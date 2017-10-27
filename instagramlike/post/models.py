@@ -9,6 +9,7 @@ class Post(models.Model):
         # 가장 나중에 달린 Comment가 가장 나중에 오도록 ordering설정
         ordering = ['created_at']
 
+
 class PostComment(models.Model):
     post = models.ForeignKey(Post)
     content = models.TextField()
