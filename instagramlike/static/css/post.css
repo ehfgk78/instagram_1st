@@ -20,6 +20,9 @@ img.img-post {
     padding: 0;
     margin: 0;
 }
+.border-none {
+    border: none;
+}
 .post .panel-body .body-content {
     padding: 10px;
 }
