@@ -30,6 +30,13 @@ class SignupForm(forms.Form):
             }
         )
     )
+    age = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
 
     # 중복 유저 검사
     def clean_username(self):
@@ -55,7 +62,8 @@ class SignupForm(forms.Form):
     def _signup(self):
         return User.objects.create_user(
             username=self.cleaned_data['username'],
-            password=self.cleaned_data['password']
+            password=self.cleaned_data['password'],
+            age=self.cleaned_data['age']
         )
 
 

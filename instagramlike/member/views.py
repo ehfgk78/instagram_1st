@@ -1,6 +1,7 @@
 from django.contrib.auth import (
     get_user_model,
     logout as django_logout,
+    login as django_login,
 )
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -16,8 +17,10 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             user = form.signup()
-            return HttpResponse(f'{user.username}, {user.password}')
-            # GET요청시  비어있는 SignupForm을 전달
+            # 회원가입이 완료되면 로그인해주고 인덱스 화면으로
+            django_login(request, user)
+            return redirect('post:post_list')
+    # GET요청시  비어있는 SignupForm을 전달
     return render(
         request,
         'member/signup.html',

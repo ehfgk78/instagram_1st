@@ -19,9 +19,11 @@ from django.contrib import admin
 
 import post
 from config import settings
+from config.views import index
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', index),
     url(r'^posts/', include( 'post.urls', namespace='post')),
     url(r'^member/', include('member.urls', namespace='member')),
 ]
