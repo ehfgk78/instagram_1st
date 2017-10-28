@@ -2,6 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
+from member.decorators import login_required
 from post.forms import PostForm, CommentForm
 from post.models import Post, PostComment
 
@@ -16,7 +17,7 @@ def post_list(request):
         }
     )
 
-
+@login_required
 def post_create(request):
     # login하지 않는  사용자는 login View로
     if not request.user.is_authenticated:
@@ -65,6 +66,8 @@ def post_detail(request, post_pk):
 
 
 def post_delete(request, post_pk):
+    if not request.user.is_authenticated:
+        return redirect('member:login')
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=post_pk)
         if post.author == request.user:
@@ -73,22 +76,24 @@ def post_delete(request, post_pk):
         else:
             raise PermissionDenied('작성자가 아닙니다.')
 
-
+@login_required
 def post_like_toggle(request, post_pk):
-    # 토글한 사람 (요청한 사용자 )
-    user = request.user
-    # 토글된 post (Post 객체)
-    post = get_object_or_404(Post, pk=post_pk)
-    # toggle:  이미 '좋아요' 누른 것이면 '좋아요' 삭제 >> 아니면 '좋아요' 추가
-    already_pressed = user.like_posts.filter(pk=post.pk)
-    if already_pressed.exists():
-        user.like_posts.remove(post)
-    else:
-        user.like_posts.add(post)
-    # 토글 후 이동할 화면 << urls << templates
-    next_path = request.GET.get('next', ' ').strip()
-    if next_path:
-        return redirect(next_path)
+    if request.method == 'POST':
+        # 토글한 사람 (요청한 사용자 )
+        user = request.user
+        # 토글된 post (Post 객체)
+        post = get_object_or_404(Post, pk=post_pk)
+        # toggle:  이미 '좋아요' 누른 것이면 '좋아요' 삭제 >> 아니면 '좋아요' 추가
+        already_pressed = user.like_posts.filter(pk=post.pk)
+        if already_pressed.exists():
+            user.like_posts.remove(post)
+        else:
+            user.like_posts.add(post)
+        # 토글 후 이동할 화면 (<< urls << templates)
+        # path 있으면 해당 위치로, 없으면 상세 페이지로
+        next_path = request.GET.get('next', ' ').strip()
+        if next_path:
+            return redirect(next_path)
     return redirect('post:post_detail', post_pk=post_pk)
 
 
@@ -139,3 +144,4 @@ def comment_delete(request, comment_pk):
             return redirect('post:post_detail', post_pk=comment.post.pk)
         else:
             raise PermissionDenied('작성자가 아닙니다.')
+

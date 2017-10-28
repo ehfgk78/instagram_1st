@@ -34,6 +34,8 @@ STATICFILES_DIRS = [
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
+LOGIN_URL = 'member:login'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
