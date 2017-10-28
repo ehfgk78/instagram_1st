@@ -33,9 +33,12 @@ def post_create(request):
         form = PostForm(request.POST, request.FILES)
         # form 생성과정에서 전달된 데이터들이 Form의 모든 field들에 유효한지 검사
         if form.is_valid():
-            Post.objects.create(
-                author=request.user,
-                photo=form.cleaned_data['photo'])
+            # Post.objects.create(
+            #     author=request.user,
+            #     photo=form.cleaned_data['photo'])
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
             return redirect('post:post_list')
         else:
             return HttpResponse('Form invalid!')

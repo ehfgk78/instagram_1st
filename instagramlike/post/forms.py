@@ -1,27 +1,31 @@
 from django import forms
 
+from post.models import Post
+
 __all__ = (
     'PostForm',
 )
 
 
-class PostForm(forms.Form):
-    photo = forms.ImageField(
-        required=True,
-        widget=forms.ClearableFileInput(
-            attrs={
-                'class': 'form-control',
-            }
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = (
+            'photo',
         )
-    )
-    text = forms.CharField(
-        max_length=50,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-            }
-        )
-    )
+
+    def save(self, commit=True, *args, **kwargs):
+        # 처음 Post객체가 만들어질 때 author필드가 비어있으면 save(commit=True)를 비허용
+        # instance 생성(commit=False)허용하고,
+        # save()에 author키워드 인수값을 전달할 수 있도록 save()메서드 재정의
+        # 새로 저장하려는 instance는 pk값이 없다.
+        if not self.instance.pk and commit:
+            author = kwargs.pop('author', None)
+            if not author:
+                raise ValueError('Author field is required')
+            self.instance.author = author
+        return super().save(*args, **kwargs)
+
 
 
 class CommentForm(forms.Form):

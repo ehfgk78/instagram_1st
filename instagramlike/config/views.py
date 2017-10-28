@@ -1,5 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 
 
 def index(request):
-    return render(request, 'post/post_list.html')
+    return redirect('post:post_list')
