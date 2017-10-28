@@ -67,8 +67,8 @@ def post_delete(request, post_pk):
         if post.author == request.user:
             post.delete()
             return redirect('post:post_list')
-    else:
-        raise PermissionDenied
+        else:
+            raise PermissionDenied('작성자가 아닙니다.')
 
 
 def comment_create(request, post_pk):
