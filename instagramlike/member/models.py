@@ -21,8 +21,36 @@ class User(AbstractUser):
         'post.Post',
         verbose_name='좋아요 누른 포스트 목록'
     )
+    # 내가 팔로우 하고 있는 유저 목록
+    #    내가 A를 follow한다. > 나는 A의 follower이며,  A는 나의 followed_user이다.
+    following_users = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        through='Relation',
+        related_name='followers',
+    )
     objects = UserManager()
 
     class Meta:
         verbose_name = '사용자'
         verbose_name_plural = f'{verbose_name} 목록'
+
+
+class Relation(models.Model):
+    # User가 follow목록을 가질 수 있도록 MTM 중개모델 구성
+    from_user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='following_user_relations',
+    )
+    to_user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='follower_relations',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Relation ( ' \
+               f'from:  {self.from_user.username},  ' \
+               f'to:  {self.to_user.username})'

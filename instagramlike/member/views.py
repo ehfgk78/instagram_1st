@@ -11,6 +11,7 @@ from member.forms import SignupForm, LoginForm
 
 User = get_user_model()
 
+
 def signup(request):
     if request.method == 'POST':
         # SignupForm에 바인딩된 request.POST
@@ -28,6 +29,7 @@ def signup(request):
             'signup_form': SignupForm(),
         }
     )
+
 
 def login(request):
     next_path = request.GET.get('next')
@@ -49,9 +51,11 @@ def login(request):
         }
     )
 
+
 def logout(request):
     django_logout(request)
     return redirect('post:post_list')
+
 
 @login_required
 def profile(request):

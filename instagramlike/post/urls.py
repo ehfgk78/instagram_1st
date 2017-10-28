@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from post.views import post_list, post_create, post_detail, comment_create, post_delete, comment_delete, \
-    post_like_toggle, profile
+    post_like_toggle
 
 urlpatterns = [
     url(r'^$', post_list, name='post_list'),

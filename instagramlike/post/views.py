@@ -17,6 +17,7 @@ def post_list(request):
         }
     )
 
+
 @login_required
 def post_create(request):
     # login하지 않는  사용자는 login View로
@@ -75,6 +76,7 @@ def post_delete(request, post_pk):
             return redirect('post:post_list')
         else:
             raise PermissionDenied('작성자가 아닙니다.')
+
 
 @login_required
 def post_like_toggle(request, post_pk):
@@ -144,4 +146,3 @@ def comment_delete(request, comment_pk):
             return redirect('post:post_detail', post_pk=comment.post.pk)
         else:
             raise PermissionDenied('작성자가 아닙니다.')
-
