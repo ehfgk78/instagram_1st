@@ -40,7 +40,7 @@ def post_create(request):
         else:
             return HttpResponse('Form invalid!')
     else:
-        #GET 요청인 경우
+        # GET 요청인 경우
         return render(
             request,
             'post/post_create.html',
@@ -72,9 +72,9 @@ def post_delete(request, post_pk):
 
 
 def comment_create(request, post_pk):
-    print('request: ', request)
-    print(request.GET)
-    print(request.POST)
+    # print('request: ', request)
+    # print(request.GET)
+    # print(request.POST)
 
     post = get_object_or_404(Post, pk=post_pk)
     if request.method == 'POST':
@@ -87,13 +87,17 @@ def comment_create(request, post_pk):
                 post=post,
                 content=comment_form.cleaned_data['content']
             )
+            # 비교
             next_path = request.GET.get('next')
+            print("next_path : ", next_path)
+            next_path = request.GET.get('next', ' ').strip()
+            print("next_path2 : ", next_path)
             if next_path:
                 return redirect(next_path)
             # 생성 후 Post의 detail 화면으로 이동
             return redirect('post:post_detail', post_pk=post_pk)
     else:
-        # GET요청이면 빈 Form(댓글 내용을 입력할 수 있는)을 생성
+        # GET 요청이면 빈 Form(댓글 내용을 입력할 수 있는)을 생성
         comment_form = CommentForm()
     # 폼이 포함된 입력 페이지를 보여주는 부분
     return render(
@@ -103,3 +107,17 @@ def comment_create(request, post_pk):
             'form': comment_form,
         }
     )
+
+
+def comment_delete(request, comment_pk):
+    # 삭제한 댓글의 post로 가기 위한 작업
+    next_path = request.GET.get('next', ' ').strip()
+
+    if request.method == 'POST':
+        comment = get_object_or_404(PostComment, pk=comment_pk)
+        if comment.author == request.user:
+            comment.delete()
+            if next_path: return redirect(next_path)
+            return redirect('post:post_detail', post_pk=comment.post.pk)
+        else:
+            raise PermissionDenied('작성자가 아닙니다.')

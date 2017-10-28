@@ -1,10 +1,14 @@
     <div id="post-{{ post.pk }}" class="panel panel-default post">
         <div class="panel-heading">
+            <!--작성자-->
             <span>{{ post.author.username }}</span>
+            <!--삭제버튼-->
+            {% if post.author == user %}
             <form action="{% url 'post:post_delete' post_pk=post.pk %}" method="post">
                 {% csrf_token %}
                 <button class="btn btn-danger btn-xs">삭제</button>
             </form>
+            {% endif %}
         </div>
 
         <div class="panel-body">
@@ -17,15 +21,32 @@
             <div class="body-content">
                 <!--댓글-->
                 <ul id="post-comments-{{ post.pk }}">
-                    {% for comment in post.postcomment_set.all %}
-                    <li>{{ comment.content }}</li>
+                    {% for comment in post.comments.all %}
+                    <li>
+                        <!--댓글 삭제 버튼-->
+                        <span>{{ comment.author }}:</span>
+                        <span>{{ comment.content }}</span>
+
+                        {% if comment.author == user %}
+                        <form action="{% url 'post:comment_delete' comment_pk=comment.pk %}?next=
+                              {% if post_type == 'list' %}
+                                   {% url 'post:post_list' %}#post-{{ post.pk }}
+                              {% elif post_type == 'detail' %}
+                                   {% url 'post:post_detail' post_pk=post.pk
+                              {% endif %}"
+                        method="post" class="form-inline">
+                            {% csrf_token %}
+                            <button class="btn btn-danger btn-xs"> 삭제</button>
+                        </form>
+                        {% endif %}
+                    </li>
                     {% endfor %}
                 </ul>
 
                 <!--댓글 달기-->
                 <form action="{% url 'post:comment_create' post_pk=post.pk %}?next=
                 {% if post_type == 'list' %}
-                     /posts/#post-{{ post.pk }}
+                    {% url 'post:post_list' %}#post-{{ post.pk }}
                 {% elif post_type == 'detail' %}
                     {% url 'post:post_detail' post_pk=post.pk %}
                 {% endif %}"
