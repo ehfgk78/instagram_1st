@@ -22,7 +22,7 @@ def signup(request):
         request,
         'member/signup.html',
         {
-            'form': SignupForm(),
+            'signup_form': SignupForm(),
         }
     )
 

@@ -33,16 +33,20 @@ def post_create(request):
         form = PostForm(request.POST, request.FILES)
         # form 생성과정에서 전달된 데이터들이 Form의 모든 field들에 유효한지 검사
         if form.is_valid():
-            post = Post.objects.create(
+            Post.objects.create(
                 author=request.user,
                 photo=form.cleaned_data['photo'])
             return redirect('post:post_list')
         else:
             return HttpResponse('Form invalid!')
     else:
+        #GET 요청인 경우
         return render(
             request,
-            'post/post_create.html'
+            'post/post_create.html',
+            {
+                'form': PostForm(),
+            }
         )
 
 
@@ -56,6 +60,7 @@ def post_detail(request, post_pk):
         }
     )
 
+
 def post_delete(request, post_pk):
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=post_pk)
@@ -64,6 +69,7 @@ def post_delete(request, post_pk):
             return redirect('post:post_list')
     else:
         raise PermissionDenied
+
 
 def comment_create(request, post_pk):
     print('request: ', request)
