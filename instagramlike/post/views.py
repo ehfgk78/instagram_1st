@@ -74,6 +74,25 @@ def post_delete(request, post_pk):
             raise PermissionDenied('작성자가 아닙니다.')
 
 
+def post_like_toggle(request, post_pk):
+    # 토글한 사람 (요청한 사용자 )
+    user = request.user
+    # 토글된 post (Post 객체)
+    post = get_object_or_404(Post, pk=post_pk)
+    # toggle:  이미 '좋아요' 누른 것이면 '좋아요' 해제 >> 아니면 '좋아요'
+    already_pressed = user.like_posts.filter(pk=post.pk)
+    if already_pressed.exists():
+        user.like_posts.remove(already_pressed)
+    else:
+        user.like_posts.add(post)
+    # 토글 후 이동할 화면 << urls << templates
+    next_path = request.GET.get('next', ' ').strip()
+    if next_path:
+        return redirect(next_path)
+    return redirect('post:post_detail', post_pk=post_pk)
+
+
+
 def comment_create(request, post_pk):
     # print('request: ', request)
     # print(request.GET)
@@ -85,16 +104,13 @@ def comment_create(request, post_pk):
         comment_form = CommentForm(request.POST)
         # 유효성 검증
         if comment_form.is_valid():
-            # PostComment 모델 인스턴스 생성
-            PostComment.objects.create(
-                post=post,
-                content=comment_form.cleaned_data['content']
-            )
-            # 비교
-            next_path = request.GET.get('next')
-            print("next_path : ", next_path)
+            comment = comment_form.save(commit=False)
+            comment.author = request.user
+            comment.post = post
+            comment.save()
+            # GET parameter로 'next'값이 전달되면
+            # 공백을 없애고 다음에 redirect될 주소로 지정
             next_path = request.GET.get('next', ' ').strip()
-            print("next_path2 : ", next_path)
             if next_path:
                 return redirect(next_path)
             # 생성 후 Post의 detail 화면으로 이동

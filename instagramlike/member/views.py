@@ -14,9 +14,9 @@ User = get_user_model()
 def signup(request):
     if request.method == 'POST':
         # SignupForm에 바인딩된 request.POST
-        form = SignupForm(request.POST)
+        form = SignupForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.signup()
+            user = form.save()
             # 회원가입이 완료되면 로그인해주고 인덱스 화면으로
             django_login(request, user)
             return redirect('post:post_list')
