@@ -1,3 +1,6 @@
+from pprint import pprint
+
+import requests
 from django.contrib.auth import (
     get_user_model,
     logout as django_logout,
@@ -6,6 +9,7 @@ from django.contrib.auth import (
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
 
 from config import settings
 from member.forms import SignupForm, LoginForm
@@ -64,6 +68,26 @@ def profile(request):
     return HttpResponse(f'User profile page {request.user}')
 
 def facebook_login(request):
-    print(request.GET)
-    print(request.POST)
-    return HttpResponse(f'GET: {request.GET} <br>POST: {request.POST}')
+    # print(request.GET)의 결과
+    code = request.GET.get('code')
+    redirect_uri = '{scheme}://{host}{relative_url}'.format(
+        scheme=request.scheme,
+        host= request.META['HTTP_HOST'],
+        relative_url=reverse('member:facebook_login'),
+    )
+
+    # ID확인: 액세스 토큰의 코드 교환 : OAuth 엔드포인트에 HTTP GET 요청
+    response = requests.get(
+        'https://graph.facebook.com/v2.10/oauth/access_token',
+        {
+            'client_id': settings.FACEBOOK_APP_ID,
+            'redirect_uri': redirect_uri,
+            'client_secret': settings.FACEBOOK_APP_SECRET_CODE,
+            'code': request.GET.get('code'),
+        }
+    )
+    # 응답
+    # 이 엔드포인트에서 받은 응답은  JSON 형식으로  반환
+    result = response.json()
+    pprint(result)
+    return HttpResponse(result)
