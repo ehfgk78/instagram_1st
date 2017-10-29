@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import json
 import os
 
-AUTH_USER_MODEL = 'member.User'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -34,7 +34,13 @@ STATICFILES_DIRS = [
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
+# FaceBook
+FACEBOOK_APP_ID = config_secret_dict['facebook']['app_id']
+FACEBOOK_APP_SECRET_CODE = config_secret_dict['facebook']['secret_code']
+
 LOGIN_URL = 'member:login'
+AUTH_USER_MODEL = 'member.User'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/

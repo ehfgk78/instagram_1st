@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
+from config import settings
 from member.forms import SignupForm, LoginForm
 
 User = get_user_model()
@@ -48,6 +49,7 @@ def login(request):
         'member/login.html',
         {
             'login_form': form,
+            'facebook_app_id': settings.FACEBOOK_APP_ID,
         }
     )
 
@@ -60,3 +62,8 @@ def logout(request):
 @login_required
 def profile(request):
     return HttpResponse(f'User profile page {request.user}')
+
+def facebook_login(request):
+    print(request.GET)
+    print(request.POST)
+    return HttpResponse(f'GET: {request.GET} <br>POST: {request.POST}')
