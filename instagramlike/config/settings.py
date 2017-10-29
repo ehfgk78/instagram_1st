@@ -37,6 +37,11 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 # FaceBook
 FACEBOOK_APP_ID = config_secret_dict['facebook']['app_id']
 FACEBOOK_APP_SECRET_CODE = config_secret_dict['facebook']['secret_code']
+FACEBOOK_SCOPE = [
+    'user_friends',
+    'public_profile',
+    'email',
+]
 
 LOGIN_URL = 'member:login'
 AUTH_USER_MODEL = 'member.User'
