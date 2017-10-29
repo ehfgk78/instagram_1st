@@ -2,8 +2,13 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .forms import SignupForm
-from .models import User
+from .models import User, Relation
 
+
+class RelationInline(admin.TabularInline):
+    model = Relation
+    fk_name = 'from_user'
+    extra = 1
 
 class UserAdmin(BaseUserAdmin):
     fieldsets = BaseUserAdmin.fieldsets + (
@@ -15,6 +20,7 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
     add_form = SignupForm
+    inlines = [ RelationInline, ]
 
 
 admin.site.register(User, UserAdmin)
